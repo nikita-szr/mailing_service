@@ -33,5 +33,6 @@ class MailingRecipientUpdateView(UpdateView):
 class MailingRecipientDeleteView(DeleteView):
     model = MailingRecipient
     template_name = 'mailing_service/recipient_confirm_delete.html'
+    context_object_name = 'recipient'
     success_url = reverse_lazy('mailing_service:recipient_list')
 
