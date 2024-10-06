@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-from django.core.mail import send_mail
+from django.core.mail import send_mail, BadHeaderError
 
 
 class MailingRecipient(models.Model):
@@ -47,20 +47,60 @@ class Mailing(models.Model):
         return f'Рассылка {self.pk} - {self.status}'
 
     def send(self):
-        """Отправка сообщений всем получателям"""
+        """Отправка сообщений всем получателям и логирование попыток отправки"""
         if self.status != 'created':
             return
 
         recipients = self.recipients.all()
         emails = [recipient.email for recipient in recipients]
 
-        send_mail(
-            subject=self.message.subject,
-            message=self.message.body,
-            from_email='example@example.com',
-            recipient_list=emails
-        )
+        for recipient in recipients:
+            try:
+                send_mail(
+                    subject=self.message.subject,
+                    message=self.message.body,
+                    from_email='test@test.com',
+                    recipient_list=[recipient.email],
+                    fail_silently=False,
+                )
+
+                MailingAttempt.objects.create(
+                    mailing=self,
+                    status='success',
+                    server_response='Письмо отправлено успешно.',
+                    attempt_datetime=timezone.now()
+                )
+
+            except BadHeaderError as e:
+                MailingAttempt.objects.create(
+                    mailing=self,
+                    status='failure',
+                    server_response=str(e),
+                    attempt_datetime=timezone.now()
+                )
+            except Exception as e:
+                MailingAttempt.objects.create(
+                    mailing=self,
+                    status='failure',
+                    server_response=str(e),
+                    attempt_datetime=timezone.now()
+                )
 
         self.status = 'started'
         self.start_datetime = timezone.now()
         self.save()
+
+
+class MailingAttempt(models.Model):
+    STATUS_CHOICES = [
+        ('success', 'Успешно'),
+        ('failure', 'Не успешно'),
+    ]
+
+    mailing = models.ForeignKey(Mailing, on_delete=models.CASCADE, related_name='attempts')
+    attempt_datetime = models.DateTimeField(default=timezone.now)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES)
+    server_response = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"Попытка рассылки {self.mailing} - {self.get_status_display()}"

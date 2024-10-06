@@ -21,8 +21,31 @@
         {% endfor %}
     </ul>
 
+    <h2>Попытки рассылки</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Дата и время попытки</th>
+                <th>Статус</th>
+                <th>Ответ сервера</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for attempt in mailing.attempts.all %}
+                <tr>
+                    <td>{{ attempt.attempt_datetime }}</td>
+                    <td>{{ attempt.get_status_display }}</td>
+                    <td>{{ attempt.server_response }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3">Попыток не найдено</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
     <a href="{% url 'mailing_service:mailing_update' mailing.pk %}">Редактировать</a>
-    <a href="{% url 'mailing_service:mailing_send' mailing.pk %}">Отправить рассылку</a>
     <a href="{% url 'mailing_service:mailing_list' %}">Назад к списку</a>
 </body>
 </html>
