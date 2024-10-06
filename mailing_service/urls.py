@@ -15,7 +15,8 @@ from .views import (
     MailingCreateView,
     MailingUpdateView,
     MailingDeleteView,
-    MailingSendView
+    MailingSendView,
+    HomePageView,
 )
 from django.conf import settings
 from django.conf.urls.static import static
@@ -24,6 +25,7 @@ from django.conf.urls.static import static
 app_name = 'mailing_service'
 
 urlpatterns = [
+    path('', HomePageView.as_view(), name='home'),
     path('recipient/recipients_list/', MailingRecipientListView.as_view(), name='recipient_list'),
     path('recipient/<int:pk>/', MailingRecipientDetailView.as_view(), name='recipient_detail'),
     path('recipient/create/', MailingRecipientCreateView.as_view(), name='recipient_create'),

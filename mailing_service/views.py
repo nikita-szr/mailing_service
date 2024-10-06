@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from .models import MailingRecipient, MailingMessage, Mailing
 from .forms import MailingRecipientForm, MailingMessageForm, MailingForm
 from django.shortcuts import redirect, get_object_or_404
@@ -110,3 +110,18 @@ class MailingSendView(View):
         mailing = get_object_or_404(Mailing, pk=pk)
         mailing.send()
         return redirect('mailing_service:mailing_detail', pk=pk)
+
+
+class HomePageView(TemplateView):
+    template_name = 'mailing_service/home.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['total_mailings'] = Mailing.objects.count()
+
+        context['active_mailings'] = Mailing.objects.filter(status='started').count()
+
+        context['unique_recipients'] = MailingRecipient.objects.values('email').distinct().count()
+
+        return context
