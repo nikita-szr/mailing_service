@@ -10,19 +10,22 @@
     <table>
         <thead>
             <tr>
-                <th>Subject</th>
-                <th>Body</th>
+                <th>Тема</th>
+                <th>Сообщение</th>
+                <th>Действия</th>
             </tr>
         </thead>
         <tbody>
             {% for message in messages %}
                 <tr>
                     <td>{{ message.subject }}</td>
-                    <td>{{ message.body }}</td>
                     <td>
-                        <a href="{% url 'mailing_service:message_detail' recipient.pk %}">Просмотр</a>
-                        <a href="{% url 'mailing_service:message_update' recipient.pk %}">Редактировать</a>
-                        <a href="{% url 'mailing_service:message_delete' recipient.pk %}">Удалить</a>
+                        {{ message.body|slice:":50" }}{% if message.body|length > 50 %}...{% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'mailing_service:message_detail' message.pk %}">Просмотр</a>
+                        <a href="{% url 'mailing_service:message_update' message.pk %}">Редактировать</a>
+                        <a href="{% url 'mailing_service:message_delete' message.pk %}">Удалить</a>
                     </td>
                 </tr>
             {% endfor %}

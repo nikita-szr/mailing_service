@@ -21,7 +21,9 @@
                 <tr>
                     <td>{{ recipient.email }}</td>
                     <td>{{ recipient.full_name }}</td>
-                    <td>{{ recipient.comment }}</td>
+                    <td>
+                        {{ recipient.comment|slice:":50" }}{% if recipient.comment|length > 50 %}...{% endif %}
+                    </td>
                     <td>
                         <a href="{% url 'mailing_service:recipient_detail' recipient.pk %}">Просмотр</a>
                         <a href="{% url 'mailing_service:recipient_update' recipient.pk %}">Редактировать</a>
