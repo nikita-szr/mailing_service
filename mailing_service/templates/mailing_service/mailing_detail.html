@@ -22,6 +22,7 @@
     </ul>
 
     <a href="{% url 'mailing_service:mailing_update' mailing.pk %}">Редактировать</a>
+    <a href="{% url 'mailing_service:mailing_send' mailing.pk %}">Отправить рассылку</a>
     <a href="{% url 'mailing_service:mailing_list' %}">Назад к списку</a>
 </body>
 </html>

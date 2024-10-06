@@ -15,6 +15,7 @@ from .views import (
     MailingCreateView,
     MailingUpdateView,
     MailingDeleteView,
+    MailingSendView
 )
 from django.conf import settings
 from django.conf.urls.static import static
@@ -38,6 +39,7 @@ urlpatterns = [
     path('mailing/create/', MailingCreateView.as_view(), name='mailing_create'),
     path('mailing/<int:pk>/update/', MailingUpdateView.as_view(), name='mailing_update'),
     path('mailing/<int:pk>/delete/', MailingDeleteView.as_view(), name='mailing_delete'),
+    path('mailing/<int:pk>/send/', MailingSendView.as_view(), name='mailing_send'),
 ]
 
 if settings.DEBUG:

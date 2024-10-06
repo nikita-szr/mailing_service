@@ -3,6 +3,8 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import MailingRecipient, MailingMessage, Mailing
 from .forms import MailingRecipientForm, MailingMessageForm, MailingForm
+from django.shortcuts import redirect, get_object_or_404
+from django.views import View
 
 
 class MailingRecipientListView(ListView):
@@ -20,14 +22,14 @@ class MailingRecipientDetailView(DetailView):
 class MailingRecipientCreateView(CreateView):
     model = MailingRecipient
     template_name = 'mailing_service/recipient_form.html'
-    form = MailingRecipientForm
+    form_class = MailingRecipientForm
     success_url = reverse_lazy('mailing_service:recipient_list')
 
 
 class MailingRecipientUpdateView(UpdateView):
     model = MailingRecipient
     template_name = 'mailing_service/recipient_form.html'
-    form = MailingRecipientForm
+    form_class = MailingRecipientForm
     success_url = reverse_lazy('mailing_service:recipient_list')
 
 
@@ -53,14 +55,14 @@ class MailingMessageDetailView(DetailView):
 class MailingMessageCreateView(CreateView):
     model = MailingMessage
     template_name = 'mailing_service/message_form.html'
-    form = MailingMessageForm
+    form_class = MailingMessageForm
     success_url = reverse_lazy('mailing_service:message_list')
 
 
 class MailingMessageUpdateView(UpdateView):
     model = MailingMessage
     template_name = 'mailing_service/message_form.html'
-    form = MailingMessageForm
+    form_class = MailingMessageForm
     success_url = reverse_lazy('mailing_service:message_list')
 
 
@@ -101,3 +103,10 @@ class MailingDeleteView(DeleteView):
     model = Mailing
     template_name = 'mailing_service/mailing_confirm_delete.html'
     success_url = reverse_lazy('mailing_service:mailing_list')
+
+
+class MailingSendView(View):
+    def post(self, request, pk):
+        mailing = get_object_or_404(Mailing, pk=pk)
+        mailing.send()
+        return redirect('mailing_service:mailing_detail', pk=pk)

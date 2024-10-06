@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.core.mail import send_mail
 
 
 class MailingRecipient(models.Model):
@@ -44,3 +45,22 @@ class Mailing(models.Model):
 
     def __str__(self):
         return f'Рассылка {self.pk} - {self.status}'
+
+    def send(self):
+        """Отправка сообщений всем получателям"""
+        if self.status != 'created':
+            return
+
+        recipients = self.recipients.all()
+        emails = [recipient.email for recipient in recipients]
+
+        send_mail(
+            subject=self.message.subject,
+            message=self.message.body,
+            from_email='example@example.com',
+            recipient_list=emails
+        )
+
+        self.status = 'started'
+        self.start_datetime = timezone.now()
+        self.save()
