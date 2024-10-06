@@ -13,7 +13,7 @@ from django.conf.urls.static import static
 app_name = 'mailing_service'
 
 urlpatterns = [
-    path('', MailingRecipientListView.as_view(), name='recipient_list'),
+    path('recipient/recipients_list/', MailingRecipientListView.as_view(), name='recipient_list'),
     path('recipient/<int:pk>/', MailingRecipientDetailView.as_view(), name='recipient_detail'),
     path('recipient/create/', MailingRecipientCreateView.as_view(), name='recipient_create'),
     path('recipient/<int:pk>/update/', MailingRecipientUpdateView.as_view(), name='recipient_update'),
