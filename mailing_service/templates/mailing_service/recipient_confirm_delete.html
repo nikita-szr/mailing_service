@@ -1,0 +1,6 @@
+<h1>Удалить подписчика "{{ recipient.full_name }}"?</h1>
+<form method="POST">
+    {% csrf_token %}
+    <button type="submit">Подтвердить</button>
+</form>
+<a href="{% url 'mailing_service:recipient_list' %}">Отменить</a>

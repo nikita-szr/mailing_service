@@ -1,0 +1,7 @@
+<h1>{{ view.object.pk|yesno:"Редактировать подписчика,Создать подписчика" }}</h1>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Сохранить</button>
+</form>
+<a href="{% url 'mailing_service:recipient_list' %}">Назад к списку</a>
