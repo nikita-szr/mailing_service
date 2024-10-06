@@ -4,34 +4,34 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from .models import MailingRecipient
 
 
-class MailingRecepientListView(ListView):
+class MailingRecipientListView(ListView):
     model = MailingRecipient
-    template_name = 'mailing_service/recepient_list.html'
-    context_object_name = "recepients"
+    template_name = 'mailing_service/recipient_list.html'
+    context_object_name = "recipients"
 
 
-class MailingRecepientDetailView(DetailView):
+class MailingRecipientDetailView(DetailView):
     model = MailingRecipient
-    template_name = 'mailing_service/recepient_detail.html'
-    context_object_name = "recepient"
+    template_name = 'mailing_service/recipient_detail.html'
+    context_object_name = "recipient"
 
 
-class MailingRecepientCreateView(CreateView):
+class MailingRecipientCreateView(CreateView):
     model = MailingRecipient
-    template_name = 'mailing_service/recepient_form.html'
+    template_name = 'mailing_service/recipient_form.html'
     fields = ['email', 'full_name', 'comment']
-    success_url = reverse_lazy('mailing_service:recepient_list')
+    success_url = reverse_lazy('mailing_service:recipient_list')
 
 
-class MailingRecepintUpdateView(UpdateView):
+class MailingRecipientUpdateView(UpdateView):
     model = MailingRecipient
-    template_name = 'mailing_service/recepient_form.html'
+    template_name = 'mailing_service/recipient_form.html'
     fields = ['email', 'full_name', 'comment']
-    success_url = reverse_lazy('mailing_service:recepient_list')
+    success_url = reverse_lazy('mailing_service:recipient_list')
 
 
-class MailingRecepientDeleteView(DeleteView):
+class MailingRecipientDeleteView(DeleteView):
     model = MailingRecipient
-    template_name = 'mailing_service/recepient_confirm_delete.html'
-    success_url = reverse_lazy('mailing_service:recepient_list')
+    template_name = 'mailing_service/recipient_confirm_delete.html'
+    success_url = reverse_lazy('mailing_service:recipient_list')
 

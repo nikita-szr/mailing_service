@@ -1,0 +1,12 @@
+<h1>Список подписчиков</h1>
+<ul>
+    {% for recipient in recipients %}
+        <li>
+            <a href="{% url 'mailing_service:recipient_detail' recipient.pk %}">{{ recepient.full_name }}</a>
+            ({{ recepient.email }})
+            <a href="{% url 'mailing_service:recipient_update' recipient.pk %}">Редактировать</a>
+            <a href="{% url 'mailing_service:recipient_delete' recipient.pk %}">Удалить</a>
+        </li>
+    {% endfor %}
+</ul>
+<a href="{% url 'mailing_service:recipient_create' %}">Добавить нового подписчика</a>

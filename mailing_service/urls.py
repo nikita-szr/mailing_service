@@ -1,11 +1,24 @@
 from django.urls import path
-from .views import (MailingRecepientListView, MailingRecepientDetailView, MailingRecepientCreateView,
-                    MailingRecepintUpdateView, MailingRecepientDeleteView)
+from .views import (
+    MailingRecipientListView,
+    MailingRecipientDetailView,
+    MailingRecipientCreateView,
+    MailingRecipientUpdateView,
+    MailingRecipientDeleteView
+)
+from django.conf import settings
+from django.conf.urls.static import static
+
+
+app_name = 'mailing_service'
 
 urlpatterns = [
-    path('', MailingRecepientListView.as_view(), name='recepient_list'),
-    path('recepient/<int:pk>/', MailingRecepientDetailView.as_view(), name='recepient_detail'),
-    path('recepient/create', MailingRecepientCreateView.as_view(), name='recepient_create'),
-    path('recepient/<int:pk>/update/', MailingRecepintUpdateView.as_view(), name='recepient_update'),
-    path('recepient/<int:pk>/delete/', MailingRecepientDeleteView.as_view(), name='recepient_delete'),
+    path('', MailingRecipientListView.as_view(), name='recipient_list'),
+    path('recipient/<int:pk>/', MailingRecipientDetailView.as_view(), name='recipient_detail'),
+    path('recipient/create/', MailingRecipientCreateView.as_view(), name='recipient_create'),
+    path('recipient/<int:pk>/update/', MailingRecipientUpdateView.as_view(), name='recipient_update'),
+    path('recipient/<int:pk>/delete/', MailingRecipientDeleteView.as_view(), name='recipient_delete'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
