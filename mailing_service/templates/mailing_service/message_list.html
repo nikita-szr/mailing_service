@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Список сообщений</title>
+</head>
+<body>
+    <h1>Список сообщений</h1>
+    <a href="{% url 'mailing_service:message_create' %}">Добавить сообщение</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Body</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for message in messages %}
+                <tr>
+                    <td>{{ message.subject }}</td>
+                    <td>{{ message.body }}</td>
+                    <td>
+                        <a href="{% url 'mailing_service:message_detail' recipient.pk %}">Просмотр</a>
+                        <a href="{% url 'mailing_service:message_update' recipient.pk %}">Редактировать</a>
+                        <a href="{% url 'mailing_service:message_delete' recipient.pk %}">Удалить</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
