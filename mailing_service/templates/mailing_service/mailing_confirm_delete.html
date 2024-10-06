@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Удалить рассылку</title>
+</head>
+<body>
+    <h1>Удалить рассылку?</h1>
+    <p>Вы уверены, что хотите удалить рассылку "{{ mailing.message.subject }}"?</p>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit">Удалить</button>
+    </form>
+    <a href="{% url 'mailing_service:mailing_list' %}">Отмена</a>
+</body>
+</html>

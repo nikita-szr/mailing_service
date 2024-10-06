@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Детали рассылки</title>
+</head>
+<body>
+    <h1>Детали рассылки</h1>
+    <p>Статус: {{ mailing.get_status_display }}</p>
+    <p>Дата и время первой отправки: {{ mailing.start_datetime }}</p>
+    <p>Дата и время окончания отправки: {{ mailing.end_datetime }}</p>
+    <p>Сообщение: {{ mailing.message.subject }}</p>
+    <p>Тело сообщения: {{ mailing.message.body }}</p>
+
+    <h2>Получатели рассылки</h2>
+    <ul>
+        {% for recipient in mailing.recipients.all %}
+            <li>{{ recipient.full_name }} ({{ recipient.email }})</li>
+        {% empty %}
+            <li>Получателей нет.</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'mailing_service:mailing_update' mailing.pk %}">Редактировать</a>
+    <a href="{% url 'mailing_service:mailing_list' %}">Назад к списку</a>
+</body>
+</html>

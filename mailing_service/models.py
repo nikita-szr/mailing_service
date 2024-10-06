@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 
 class MailingRecipient(models.Model):
@@ -26,3 +27,20 @@ class MailingMessage(models.Model):
         verbose_name = 'сообщение'
         verbose_name_plural = 'сообщения'
         ordering = ['subject']
+
+
+class Mailing(models.Model):
+    STATUS_CHOICES = [
+        ('created', 'Создана'),
+        ('started', 'Запущена'),
+        ('completed', 'Завершена'),
+    ]
+
+    start_datetime = models.DateTimeField("Дата и время начала отправки", default=timezone.now)
+    end_datetime = models.DateTimeField("Дата и время окончания отправки", blank=True, null=True)
+    status = models.CharField("Статус", max_length=10, choices=STATUS_CHOICES, default='created')
+    message = models.ForeignKey('MailingMessage', on_delete=models.CASCADE, related_name='mailings')
+    recipients = models.ManyToManyField('MailingRecipient', related_name='mailings')
+
+    def __str__(self):
+        return f'Рассылка {self.pk} - {self.status}'
