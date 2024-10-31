@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.core.mail import send_mail, BadHeaderError
+from django.contrib.auth.models import AbstractUser
 
 
 class MailingRecipient(models.Model):
@@ -104,3 +105,10 @@ class MailingAttempt(models.Model):
 
     def __str__(self):
         return f"Попытка рассылки {self.mailing} - {self.get_status_display()}"
+
+
+class CustomUser(AbstractUser):
+    email_confirmed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.username

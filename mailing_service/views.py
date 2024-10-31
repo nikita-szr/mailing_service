@@ -1,10 +1,18 @@
-from django.shortcuts import render
-from django.urls import reverse_lazy
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from .models import MailingRecipient, MailingMessage, Mailing
 from .forms import MailingRecipientForm, MailingMessageForm, MailingForm
 from django.shortcuts import redirect, get_object_or_404
 from django.views import View
+from django.core.mail import send_mail
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth import login
+from .models import CustomUser
+from .forms import UserRegistrationForm
+from django.http import HttpResponse
 
 
 class MailingRecipientListView(ListView):
@@ -125,3 +133,41 @@ class HomePageView(TemplateView):
         context['unique_recipients'] = MailingRecipient.objects.values('email').distinct().count()
 
         return context
+
+
+class RegisterView(View):
+    def get(self, request):
+        form = UserRegistrationForm()
+        return render(request, 'mailing_service/register.html', {'form': form})
+
+    def post(self, request):
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
+
+            subject = "Подтверждение регистрации"
+            message = "Перейдите по ссылке для подтверждения регистрации: " \
+                      f"{request.build_absolute_uri(reverse('mailing_service:confirm_email', args=[urlsafe_base64_encode(force_bytes(user.pk)), default_token_generator.make_token(user)]))}"
+            send_mail(subject, message, 'admin@example.com', [user.email])
+            return redirect('mailing_service:registration_complete')
+        return render(request, 'mailing_service/register.html', {'form': form})
+
+
+class ConfirmEmailView(View):
+    def get(self, request, uidb64, token):
+        try:
+            uid = urlsafe_base64_decode(uidb64).decode()
+            user = CustomUser.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
+            user = None
+
+        if user is not None and default_token_generator.check_token(user, token):
+            user.is_active = True
+            user.email_confirmed = True
+            user.save()
+            login(request, user)
+            return render(request, 'mailing_service/confirm_email.html')
+        else:
+            return HttpResponse('Ссылка для подтверждения недействительна.')

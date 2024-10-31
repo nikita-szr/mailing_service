@@ -1,5 +1,7 @@
 from django import forms
 from .models import MailingRecipient, MailingMessage, Mailing
+from django.contrib.auth.forms import UserCreationForm
+from .models import CustomUser
 
 
 class MailingRecipientForm(forms.ModelForm):
@@ -22,3 +24,11 @@ class MailingForm(forms.ModelForm):
             'start_datetime': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
             'end_datetime': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }
+
+
+class UserRegistrationForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'email', 'password1', 'password2')
