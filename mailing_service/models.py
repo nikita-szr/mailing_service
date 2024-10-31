@@ -2,12 +2,14 @@ from django.db import models
 from django.utils import timezone
 from django.core.mail import send_mail, BadHeaderError
 from django.contrib.auth.models import AbstractUser
+from django.conf import settings
 
 
 class MailingRecipient(models.Model):
     email = models.EmailField(unique=True)
     full_name = models.CharField(max_length=200)
     comment = models.TextField(blank=True, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='recipients')
 
     def __str__(self):
         return self.email
@@ -43,6 +45,7 @@ class Mailing(models.Model):
     status = models.CharField("Статус", max_length=10, choices=STATUS_CHOICES, default='created')
     message = models.ForeignKey('MailingMessage', on_delete=models.CASCADE, related_name='mailings')
     recipients = models.ManyToManyField('MailingRecipient', related_name='mailings')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='mailings')
 
     def __str__(self):
         return f'Рассылка {self.pk} - {self.status}'

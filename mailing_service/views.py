@@ -10,43 +10,64 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth import login
-from .models import CustomUser
+from .models import CustomUser, Mailing, MailingRecipient
 from .forms import UserRegistrationForm
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 
-class MailingRecipientListView(ListView):
+class MailingRecipientListView(LoginRequiredMixin, ListView):
     model = MailingRecipient
     template_name = 'mailing_service/recipient_list.html'
     context_object_name = "recipients"
 
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return MailingRecipient.objects.all()
+        return MailingRecipient.objects.filter(user=self.request.user)
 
-class MailingRecipientDetailView(DetailView):
+
+class MailingRecipientDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = MailingRecipient
     template_name = 'mailing_service/recipient_detail.html'
     context_object_name = "recipient"
 
+    def test_func(self):
+        recipient = self.get_object()
+        return self.request.user.is_staff or recipient.user == self.request.user
 
-class MailingRecipientCreateView(CreateView):
+
+class MailingRecipientCreateView(LoginRequiredMixin, CreateView):
     model = MailingRecipient
     template_name = 'mailing_service/recipient_form.html'
     form_class = MailingRecipientForm
     success_url = reverse_lazy('mailing_service:recipient_list')
 
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
-class MailingRecipientUpdateView(UpdateView):
+
+class MailingRecipientUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = MailingRecipient
     template_name = 'mailing_service/recipient_form.html'
     form_class = MailingRecipientForm
     success_url = reverse_lazy('mailing_service:recipient_list')
 
+    def test_func(self):
+        recipient = self.get_object()
+        return recipient.user == self.request.user
 
-class MailingRecipientDeleteView(DeleteView):
+
+class MailingRecipientDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = MailingRecipient
     template_name = 'mailing_service/recipient_confirm_delete.html'
-    context_object_name = 'recipient'
     success_url = reverse_lazy('mailing_service:recipient_list')
+
+    def test_func(self):
+        recipient = self.get_object()
+        return recipient.user == self.request.user
 
 
 class MailingMessageListView(ListView):
@@ -82,16 +103,25 @@ class MailingMessageDeleteView(DeleteView):
     success_url = reverse_lazy('mailing_service:message_list')
 
 
-class MailingListView(ListView):
+class MailingListView(LoginRequiredMixin, ListView):
     model = Mailing
     template_name = 'mailing_service/mailing_list.html'
     context_object_name = 'mailings'
 
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return Mailing.objects.all()
+        return Mailing.objects.filter(user=self.request.user)
 
-class MailingDetailView(DetailView):
+
+class MailingDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = Mailing
     template_name = 'mailing_service/mailing_detail.html'
     context_object_name = 'mailing'
+
+    def test_func(self):
+        mailing = self.get_object()
+        return self.request.user.is_staff or mailing.user == self.request.user
 
 
 class MailingCreateView(CreateView):
@@ -114,11 +144,16 @@ class MailingDeleteView(DeleteView):
     success_url = reverse_lazy('mailing_service:mailing_list')
 
 
-class MailingSendView(View):
+class MailingSendView(LoginRequiredMixin, UserPassesTestMixin, View):
     def post(self, request, pk):
         mailing = get_object_or_404(Mailing, pk=pk)
-        mailing.send()
+        if self.test_func():
+            mailing.send()
         return redirect('mailing_service:mailing_detail', pk=pk)
+
+    def test_func(self):
+        mailing = get_object_or_404(Mailing, pk=self.kwargs['pk'])
+        return self.request.user.is_staff or mailing.user == self.request.user
 
 
 class HomePageView(TemplateView):
