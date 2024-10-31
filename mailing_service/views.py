@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
-from .models import MailingRecipient, MailingMessage, Mailing
+from .models import MailingRecipient, MailingMessage, Mailing, MailingAttempt
 from .forms import MailingRecipientForm, MailingMessageForm, MailingForm
 from django.shortcuts import redirect, get_object_or_404
 from django.views import View
@@ -13,6 +13,7 @@ from django.contrib.auth import login
 from .models import CustomUser
 from .forms import UserRegistrationForm
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 
 
 class MailingRecipientListView(ListView):
@@ -171,3 +172,24 @@ class ConfirmEmailView(View):
             return render(request, 'mailing_service/confirm_email.html')
         else:
             return HttpResponse('Ссылка для подтверждения недействительна.')
+
+
+@login_required
+def statistics_view(request):
+    user = request.user
+
+    mailings = Mailing.objects.filter(recipients__email=user.email)
+
+    total_attempts = MailingAttempt.objects.filter(mailing__in=mailings).count()
+    successful_attempts = MailingAttempt.objects.filter(mailing__in=mailings, status='success').count()
+    failed_attempts = MailingAttempt.objects.filter(mailing__in=mailings, status='failure').count()
+    total_sent_messages = sum(mailing.recipients.count() for mailing in mailings)
+
+    context = {
+        'total_attempts': total_attempts,
+        'successful_attempts': successful_attempts,
+        'failed_attempts': failed_attempts,
+        'total_sent_messages': total_sent_messages,
+    }
+
+    return render(request, 'statistics.html', context)
