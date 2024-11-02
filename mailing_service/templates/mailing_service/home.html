@@ -5,10 +5,22 @@
     <title>Главная страница</title>
 </head>
 <body>
-    <h1>Статистика рассылок</h1>
 
-    <p>Общее количество рассылок: {{ total_mailings }}</p>
-    <p>Количество активных рассылок (Запущена): {{ active_mailings }}</p>
-    <p>Количество уникальных получателей: {{ unique_recipients }}</p>
+<h1>Статистика рассылок</h1>
+
+<nav>
+    {% if user.is_authenticated %}
+        <a href="{% url 'mailing_service:logout' %}">Выход</a>
+    {% else %}
+        <a href="{% url 'mailing_service:login' %}">Вход</a>
+        <a href="{% url 'mailing_service:register' %}">Регистрация</a>
+    {% endif %}
+</nav>
+
+<h2>Показатели</h2>
+<p>Общее количество рассылок: {{ total_mailings }}</p>
+<p>Количество активных рассылок (Запущена): {{ active_mailings }}</p>
+<p>Количество уникальных получателей: {{ unique_recipients }}</p>
+
 </body>
 </html>

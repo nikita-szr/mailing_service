@@ -149,3 +149,6 @@ CACHES = {
         }
     }
 }
+
+LOGIN_REDIRECT_URL = 'mailing_service:home'
+LOGOUT_REDIRECT_URL = 'mailing_service:home'
