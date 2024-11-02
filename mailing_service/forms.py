@@ -1,7 +1,7 @@
 from django import forms
-from .models import MailingRecipient, MailingMessage, Mailing
 from django.contrib.auth.forms import UserCreationForm
-from .models import CustomUser
+
+from .models import CustomUser, Mailing, MailingMessage, MailingRecipient
 
 
 class MailingRecipientForm(forms.ModelForm):

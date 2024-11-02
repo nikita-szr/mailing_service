@@ -1,8 +1,8 @@
+from django.conf import settings
+from django.contrib.auth.models import AbstractUser
+from django.core.mail import BadHeaderError, send_mail
 from django.db import models
 from django.utils import timezone
-from django.core.mail import send_mail, BadHeaderError
-from django.contrib.auth.models import AbstractUser
-from django.conf import settings
 
 
 class MailingRecipient(models.Model):
@@ -56,7 +56,6 @@ class Mailing(models.Model):
             return
 
         recipients = self.recipients.all()
-        emails = [recipient.email for recipient in recipients]
 
         for recipient in recipients:
             try:

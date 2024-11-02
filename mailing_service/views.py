@@ -1,23 +1,23 @@
-from django.shortcuts import render, redirect
-from django.urls import reverse_lazy, reverse
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
-from .models import MailingRecipient, MailingMessage, Mailing, MailingAttempt
-from .forms import MailingRecipientForm, MailingMessageForm, MailingForm
-from django.shortcuts import redirect, get_object_or_404
-from django.views import View
-from django.core.mail import send_mail
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes
-from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth import login
-from .models import CustomUser, Mailing, MailingRecipient
-from .forms import UserRegistrationForm
-from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.decorators.cache import cache_page
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_control
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.views import View
+from django.views.decorators.cache import cache_control, cache_page
+from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
+                                  TemplateView, UpdateView)
+
+from .forms import (MailingForm, MailingMessageForm, MailingRecipientForm,
+                    UserRegistrationForm)
+from .models import (CustomUser, Mailing, MailingAttempt, MailingMessage,
+                     MailingRecipient)
 
 
 @method_decorator(cache_page(60 * 15), name='dispatch')
@@ -195,7 +195,9 @@ class RegisterView(View):
 
             subject = "Подтверждение регистрации"
             message = "Перейдите по ссылке для подтверждения регистрации: " \
-                      f"{request.build_absolute_uri(reverse('mailing_service:confirm_email', args=[urlsafe_base64_encode(force_bytes(user.pk)), default_token_generator.make_token(user)]))}"
+                      f"{request.build_absolute_uri(reverse('mailing_service:confirm_email',
+                                                            args=[urlsafe_base64_encode(force_bytes(user.pk)),
+                                                                  default_token_generator.make_token(user)]))}"
             send_mail(subject, message, 'admin@example.com', [user.email])
             return redirect('mailing_service:registration_complete')
         return render(request, 'mailing_service/register.html', {'form': form})

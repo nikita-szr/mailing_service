@@ -1,31 +1,17 @@
-from django.urls import path
-from .views import (
-    MailingRecipientListView,
-    MailingRecipientDetailView,
-    MailingRecipientCreateView,
-    MailingRecipientUpdateView,
-    MailingRecipientDeleteView,
-    MailingMessageListView,
-    MailingMessageDetailView,
-    MailingMessageCreateView,
-    MailingMessageUpdateView,
-    MailingMessageDeleteView,
-    MailingListView,
-    MailingDetailView,
-    MailingCreateView,
-    MailingUpdateView,
-    MailingDeleteView,
-    MailingSendView,
-    HomePageView,
-    RegisterView,
-    ConfirmEmailView,
-    TemplateView,
-    statistics_view
-)
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
+from django.urls import path
 
+from .views import (ConfirmEmailView, HomePageView, MailingCreateView,
+                    MailingDeleteView, MailingDetailView, MailingListView,
+                    MailingMessageCreateView, MailingMessageDeleteView,
+                    MailingMessageDetailView, MailingMessageListView,
+                    MailingMessageUpdateView, MailingRecipientCreateView,
+                    MailingRecipientDeleteView, MailingRecipientDetailView,
+                    MailingRecipientListView, MailingRecipientUpdateView,
+                    MailingSendView, MailingUpdateView, RegisterView,
+                    TemplateView, statistics_view)
 
 app_name = 'mailing_service'
 
@@ -49,7 +35,8 @@ urlpatterns = [
     path('mailing/<int:pk>/send/', MailingSendView.as_view(), name='mailing_send'),
     path('register/', RegisterView.as_view(), name='register'),
     path('confirm_email/<uidb64>/<token>/', ConfirmEmailView.as_view(), name='confirm_email'),
-    path('registration_complete/', TemplateView.as_view(template_name="mailing_service/registration_complete.html"), name='registration_complete'),
+    path('registration_complete/', TemplateView.as_view(template_name="mailing_service/registration_complete.html"),
+         name='registration_complete'),
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
