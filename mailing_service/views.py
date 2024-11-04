@@ -178,6 +178,9 @@ class HomePageView(TemplateView):
 
         context['unique_recipients'] = MailingRecipient.objects.values('email').distinct().count()
 
+        if self.request.user.is_authenticated:
+            context['show_actions'] = True
+
         return context
 
 
@@ -190,7 +193,7 @@ class RegisterView(View):
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.is_active = False
+            user.is_active = True
             user.save()
 
             subject = "Подтверждение регистрации"

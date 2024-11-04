@@ -1,26 +1,22 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Главная страница</title>
-</head>
-<body>
+{% block content %}
+<h1>Добро пожаловать на главную страницу</h1>
 
-<h1>Статистика рассылок</h1>
+<p>Всего рассылок: {{ total_mailings }}</p>
+<p>Активные рассылки: {{ active_mailings }}</p>
+<p>Уникальные получатели: {{ unique_recipients }}</p>
 
-<nav>
-    {% if user.is_authenticated %}
-        <a href="{% url 'mailing_service:logout' %}">Выход</a>
-    {% else %}
-        <a href="{% url 'mailing_service:login' %}">Вход</a>
-        <a href="{% url 'mailing_service:register' %}">Регистрация</a>
-    {% endif %}
-</nav>
+{% if show_actions %}
+    <h2>Доступные действия:</h2>
+    <ul>
+        <li><a href="{% url 'mailing_service:mailing_create' %}">Создать рассылку</a></li>
+        <li><a href="{% url 'mailing_service:recipient_create' %}">Добавить получателя</a></li>
+        <li><a href="{% url 'mailing_service:message_create' %}">Создать сообщение</a></li>
+        <li><a href="{% url 'mailing_service:mailing_list' %}">Список рассылок</a></li>
+        <li><a href="{% url 'mailing_service:recipient_list' %}">Список получателей</a></li>
+    </ul>
+    <p><a href="{% url 'mailing_service:logout' %}">Выйти</a></p>
+{% else %}
+    <p><a href="{% url 'mailing_service:login' %}">Войти</a> или <a href="{% url 'mailing_service:register' %}">Зарегистрироваться</a>, чтобы получить доступ к расширенным функциям.</p>
+{% endif %}
 
-<h2>Показатели</h2>
-<p>Общее количество рассылок: {{ total_mailings }}</p>
-<p>Количество активных рассылок (Запущена): {{ active_mailings }}</p>
-<p>Количество уникальных получателей: {{ unique_recipients }}</p>
-
-</body>
-</html>
+{% endblock %}
