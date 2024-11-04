@@ -14,7 +14,10 @@
         <li><a href="{% url 'mailing_service:mailing_list' %}">Список рассылок</a></li>
         <li><a href="{% url 'mailing_service:recipient_list' %}">Список получателей</a></li>
     </ul>
-    <p><a href="{% url 'mailing_service:logout' %}">Выйти</a></p>
+    <form action="{% url 'mailing_service:logout' %}" method="post" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit">Выйти</button>
+    </form>
 {% else %}
     <p><a href="{% url 'mailing_service:login' %}">Войти</a> или <a href="{% url 'mailing_service:register' %}">Зарегистрироваться</a>, чтобы получить доступ к расширенным функциям.</p>
 {% endif %}
