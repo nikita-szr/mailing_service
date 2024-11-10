@@ -6,6 +6,15 @@
 </head>
 <body>
     <h1>Детали рассылки</h1>
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
     <p>Статус: {{ mailing.get_status_display }}</p>
     <p>Дата и время первой отправки: {{ mailing.start_datetime }}</p>
     <p>Дата и время окончания отправки: {{ mailing.end_datetime }}</p>
@@ -44,6 +53,13 @@
             {% endfor %}
         </tbody>
     </table>
+
+    {% if user.is_authenticated and user.is_staff or mailing.user == user %}
+        <form action="{% url 'mailing_service:mailing_send' mailing.pk %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Отправить рассылку</button>
+        </form>
+    {% endif %}
 
     <a href="{% url 'mailing_service:mailing_update' mailing.pk %}">Редактировать</a>
     <a href="{% url 'mailing_service:mailing_list' %}">Назад к списку</a>

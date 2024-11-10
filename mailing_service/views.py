@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -156,8 +157,13 @@ class MailingDeleteView(DeleteView):
 class MailingSendView(LoginRequiredMixin, UserPassesTestMixin, View):
     def post(self, request, pk):
         mailing = get_object_or_404(Mailing, pk=pk)
-        if self.test_func():
+
+        if mailing.status == 'created':
             mailing.send()
+            messages.success(request, 'Рассылка успешно запущена!')
+        else:
+            messages.warning(request, 'Эта рассылка уже запущена или завершена.')
+
         return redirect('mailing_service:mailing_detail', pk=pk)
 
     def test_func(self):
