@@ -93,6 +93,13 @@ class Mailing(models.Model):
         self.start_datetime = timezone.now()
         self.save()
 
+    class Meta:
+        verbose_name = 'рассылка'
+        verbose_name_plural = 'рассылки'
+        permissions = [
+            ("can_manage_mailing", "Может управлять рассылками"),
+        ]
+
 
 class MailingAttempt(models.Model):
     STATUS_CHOICES = [
