@@ -11,7 +11,7 @@ from .views import (ConfirmEmailView, HomePageView, MailingCreateView,
                     MailingRecipientDeleteView, MailingRecipientDetailView,
                     MailingRecipientListView, MailingRecipientUpdateView,
                     MailingSendView, MailingUpdateView, RegisterView,
-                    TemplateView, statistics_view)
+                    TemplateView, statistics_view, MailingAttemptListView)
 
 app_name = 'mailing_service'
 
@@ -44,6 +44,7 @@ urlpatterns = [
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     path('statistics/', statistics_view, name='statistics'),
+    path('mailing-attempts/', MailingAttemptListView.as_view(), name='mailing_attempt_list'),
 ]
 
 if settings.DEBUG:

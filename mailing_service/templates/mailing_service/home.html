@@ -13,6 +13,7 @@
         <li><a href="{% url 'mailing_service:message_create' %}">Создать сообщение</a></li>
         <li><a href="{% url 'mailing_service:mailing_list' %}">Список рассылок</a></li>
         <li><a href="{% url 'mailing_service:recipient_list' %}">Список получателей</a></li>
+        <li><a href="{% url 'mailing_service:mailing_attempt_list' %}">Попытки рассылок</a> </li>
     </ul>
     <form action="{% url 'mailing_service:logout' %}" method="post" style="display: inline;">
         {% csrf_token %}

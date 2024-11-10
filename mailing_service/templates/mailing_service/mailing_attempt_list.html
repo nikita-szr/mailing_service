@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Попытки рассылок</title>
+</head>
+<body>
+    <h1>Попытки рассылок</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Рассылка</th>
+                <th>Статус</th>
+                <th>Дата попытки</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for attempt in mailing_attempts %}
+                <tr>
+                    <td>{{ attempt.mailing }}</td>
+                    <td>{{ attempt.status }}</td>
+                    <td>{{ attempt.attempt_date }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

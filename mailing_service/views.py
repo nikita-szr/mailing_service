@@ -243,3 +243,14 @@ def statistics_view(request):
     }
 
     return render(request, 'statistics.html', context)
+
+
+class MailingAttemptListView(LoginRequiredMixin, ListView):
+    model = MailingAttempt
+    template_name = 'mailing_service/mailing_attempt_list.html'
+    context_object_name = 'mailing_attempts'
+
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return MailingAttempt.objects.all()
+        return MailingAttempt.objects.filter(mailing__user=self.request.user)
