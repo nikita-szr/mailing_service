@@ -1,28 +1,33 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Попытки рассылок</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
 </head>
 <body>
-    <h1>Попытки рассылок</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Рассылка</th>
-                <th>Статус</th>
-                <th>Дата попытки</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for attempt in mailing_attempts %}
+    <div class="container">
+        <h1 class="my-4">Попытки рассылок</h1>
+        <table class="table table-striped">
+            <thead>
                 <tr>
-                    <td>{{ attempt.mailing }}</td>
-                    <td>{{ attempt.status }}</td>
-                    <td>{{ attempt.attempt_date }}</td>
+                    <th>Рассылка</th>
+                    <th>Статус</th>
+                    <th>Дата попытки</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for attempt in mailing_attempts %}
+                    <tr>
+                        <td>{{ attempt.mailing }}</td>
+                        <td>{{ attempt.status }}</td>
+                        <td>{{ attempt.attempt_date }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>

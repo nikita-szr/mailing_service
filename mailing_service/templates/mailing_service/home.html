@@ -1,26 +1,40 @@
-{% block content %}
-<h1>Добро пожаловать на главную страницу</h1>
+{% load static %}
 
-<p>Всего рассылок: {{ total_mailings }}</p>
-<p>Активные рассылки: {{ active_mailings }}</p>
-<p>Уникальные получатели: {{ unique_recipients }}</p>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная страница</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+</head>
+<body>
+    <div class="container">
+        {% block content %}
+        <h1>Добро пожаловать на главную страницу</h1>
 
-{% if show_actions %}
-    <h2>Доступные действия:</h2>
-    <ul>
-        <li><a href="{% url 'mailing_service:mailing_create' %}">Создать рассылку</a></li>
-        <li><a href="{% url 'mailing_service:recipient_create' %}">Добавить получателя</a></li>
-        <li><a href="{% url 'mailing_service:message_create' %}">Создать сообщение</a></li>
-        <li><a href="{% url 'mailing_service:mailing_list' %}">Список рассылок</a></li>
-        <li><a href="{% url 'mailing_service:recipient_list' %}">Список получателей</a></li>
-        <li><a href="{% url 'mailing_service:mailing_attempt_list' %}">Попытки рассылок</a> </li>
-    </ul>
-    <form action="{% url 'mailing_service:logout' %}" method="post" style="display: inline;">
-        {% csrf_token %}
-        <button type="submit">Выйти</button>
-    </form>
-{% else %}
-    <p><a href="{% url 'mailing_service:login' %}">Войти</a> или <a href="{% url 'mailing_service:register' %}">Зарегистрироваться</a>, чтобы получить доступ к расширенным функциям.</p>
-{% endif %}
+        <p>Всего рассылок: {{ total_mailings }}</p>
+        <p>Активные рассылки: {{ active_mailings }}</p>
+        <p>Уникальные получатели: {{ unique_recipients }}</p>
 
-{% endblock %}
+        {% if show_actions %}
+            <h2>Доступные действия:</h2>
+            <ul>
+                <li><a href="{% url 'mailing_service:mailing_create' %}">Создать рассылку</a></li>
+                <li><a href="{% url 'mailing_service:recipient_create' %}">Добавить получателя</a></li>
+                <li><a href="{% url 'mailing_service:message_create' %}">Создать сообщение</a></li>
+                <li><a href="{% url 'mailing_service:mailing_list' %}">Список рассылок</a></li>
+                <li><a href="{% url 'mailing_service:recipient_list' %}">Список получателей</a></li>
+                <li><a href="{% url 'mailing_service:mailing_attempt_list' %}">Попытки рассылок</a></li>
+            </ul>
+            <form action="{% url 'mailing_service:logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Выйти</button>
+            </form>
+        {% else %}
+            <p><a href="{% url 'mailing_service:login' %}" class="btn btn-primary">Войти</a> или <a href="{% url 'mailing_service:register' %}" class="btn btn-secondary">Зарегистрироваться</a>, чтобы получить доступ к расширенным функциям.</p>
+        {% endif %}
+
+        {% endblock %}
+    </div>
+</body>
+</html>

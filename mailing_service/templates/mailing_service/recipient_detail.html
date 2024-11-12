@@ -1,15 +1,21 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Детали получателя</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
 </head>
 <body>
-    <h1>Детали получателя</h1>
-    <p>Email: {{ recipient.email }}</p>
-    <p>Ф. И. О.: {{ recipient.full_name }}</p>
-    <p>Комментарий: {{ recipient.comment }}</p>
-    <a href="{% url 'mailing_service:recipient_update' recipient.pk %}">Редактировать</a>
-    <a href="{% url 'mailing_service:recipient_list' %}">Назад к списку</a>
+    <div class="container my-4">
+        <h1 class="mb-4">Детали получателя</h1>
+        <p><strong>Email:</strong> {{ recipient.email }}</p>
+        <p><strong>Ф. И. О.:</strong> {{ recipient.full_name }}</p>
+        <p><strong>Комментарий:</strong> {{ recipient.comment }}</p>
+
+        <a href="{% url 'mailing_service:recipient_update' recipient.pk %}" class="btn btn-primary">Редактировать</a>
+        <a href="{% url 'mailing_service:recipient_list' %}" class="btn btn-secondary ml-2">Назад к списку</a>
+    </div>
 </body>
 </html>

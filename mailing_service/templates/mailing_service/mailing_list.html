@@ -1,37 +1,42 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Список рассылок</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
 </head>
 <body>
-    <h1>Список рассылок</h1>
-    <a href="{% url 'mailing_service:mailing_create' %}">Добавить рассылку</a>
-    <table>
-        <thead>
-            <tr>
-                <th>Статус</th>
-                <th>Дата начала</th>
-                <th>Дата окончания</th>
-                <th>Сообщение</th>
-                <th>Действия</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for mailing in mailings %}
+    <div class="container my-4">
+        <h1 class="mb-4">Список рассылок</h1>
+        <a href="{% url 'mailing_service:mailing_create' %}" class="btn btn-primary mb-3">Добавить рассылку</a>
+        <table class="table table-bordered table-striped">
+            <thead>
                 <tr>
-                    <td>{{ mailing.get_status_display }}</td>
-                    <td>{{ mailing.start_datetime }}</td>
-                    <td>{{ mailing.end_datetime }}</td>
-                    <td>{{ mailing.message.subject }}</td>
-                    <td>
-                        <a href="{% url 'mailing_service:mailing_detail' mailing.pk %}">Просмотр</a>
-                        <a href="{% url 'mailing_service:mailing_update' mailing.pk %}">Редактировать</a>
-                        <a href="{% url 'mailing_service:mailing_delete' mailing.pk %}">Удалить</a>
-                    </td>
+                    <th>Статус</th>
+                    <th>Дата начала</th>
+                    <th>Дата окончания</th>
+                    <th>Сообщение</th>
+                    <th>Действия</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for mailing in mailings %}
+                    <tr>
+                        <td>{{ mailing.get_status_display }}</td>
+                        <td>{{ mailing.start_datetime }}</td>
+                        <td>{{ mailing.end_datetime }}</td>
+                        <td>{{ mailing.message.subject }}</td>
+                        <td>
+                            <a href="{% url 'mailing_service:mailing_detail' mailing.pk %}" class="btn btn-info btn-sm">Просмотр</a>
+                            <a href="{% url 'mailing_service:mailing_update' mailing.pk %}" class="btn btn-warning btn-sm">Редактировать</a>
+                            <a href="{% url 'mailing_service:mailing_delete' mailing.pk %}" class="btn btn-danger btn-sm">Удалить</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>

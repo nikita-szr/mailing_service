@@ -1,16 +1,21 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Удалить сообщение</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
 </head>
 <body>
-    <h1>Удалить сообщение</h1>
-    <p>Вы уверены, что хотите удалить сообщение {{ message.subject }}?</p>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit">Удалить</button>
-    </form>
-    <a href="{% url 'mailing_service:message_list' %}">Назад к списку</a>
+    <div class="container my-4">
+        <h1 class="mb-4">Удалить сообщение</h1>
+        <p>Вы уверены, что хотите удалить сообщение "{{ message.subject }}"?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Удалить</button>
+        </form>
+        <a href="{% url 'mailing_service:message_list' %}" class="btn btn-secondary mt-3">Назад к списку</a>
+    </div>
 </body>
 </html>

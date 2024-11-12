@@ -1,15 +1,30 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Статистика рассылок</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
 </head>
 <body>
-    <h1>Статистика рассылок</h1>
+    <div class="container my-5">
+        <h1 class="mb-4 text-center">Статистика рассылок</h1>
 
-    <p>Общее количество попыток рассылок: {{ total_attempts }}</p>
-    <p>Количество успешных попыток: {{ successful_attempts }}</p>
-    <p>Количество неуспешных попыток: {{ failed_attempts }}</p>
-    <p>Количество отправленных сообщений: {{ total_sent_messages }}</p>
+        <div class="list-group">
+            <p class="list-group-item">
+                <strong>Общее количество попыток рассылок:</strong> {{ total_attempts }}
+            </p>
+            <p class="list-group-item">
+                <strong>Количество успешных попыток:</strong> {{ successful_attempts }}
+            </p>
+            <p class="list-group-item">
+                <strong>Количество неуспешных попыток:</strong> {{ failed_attempts }}
+            </p>
+            <p class="list-group-item">
+                <strong>Количество отправленных сообщений:</strong> {{ total_sent_messages }}
+            </p>
+        </div>
+    </div>
 </body>
 </html>

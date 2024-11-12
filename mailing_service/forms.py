@@ -1,6 +1,5 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.utils import timezone
 from .models import CustomUser, Mailing, MailingMessage, MailingRecipient
 
 
