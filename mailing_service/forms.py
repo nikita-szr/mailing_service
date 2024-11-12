@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.utils import timezone
 from .models import CustomUser, Mailing, MailingMessage, MailingRecipient
 
@@ -27,8 +27,10 @@ class MailingForm(forms.ModelForm):
 
 
 class UserRegistrationForm(UserCreationForm):
-    email = forms.EmailField(required=True)
-
     class Meta:
         model = CustomUser
-        fields = ('username', 'email', 'password1', 'password2')
+        fields = ('email', 'username', 'password1', 'password2', 'avatar', 'phone_number', 'country')
+
+
+class CustomAuthenticationForm(AuthenticationForm):
+    username = forms.EmailField(label="Email", max_length=254)

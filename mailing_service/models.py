@@ -117,7 +117,14 @@ class MailingAttempt(models.Model):
 
 
 class CustomUser(AbstractUser):
-    email_confirmed = models.BooleanField(default=False)
+    email = models.EmailField(unique=True, verbose_name="Электронная почта")
+    email_confirmed = models.BooleanField(default=True)
+    avatar = models.ImageField(upload_to="avatars/", blank=True, null=True, verbose_name="Аватар")
+    phone_number = models.CharField(max_length=20, blank=True, verbose_name="Номер телефона")
+    country = models.CharField(max_length=100, blank=True, verbose_name="Страна")
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["username"]
 
     def __str__(self):
-        return self.username
+        return self.email
