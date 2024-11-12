@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-
+from django.utils import timezone
 from .models import CustomUser, Mailing, MailingMessage, MailingRecipient
 
 
@@ -21,8 +21,8 @@ class MailingForm(forms.ModelForm):
         model = Mailing
         fields = ['start_datetime', 'end_datetime', 'status', 'message', 'recipients']
         widgets = {
-            'start_datetime': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
-            'end_datetime': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+            'start_datetime': forms.DateTimeInput,
+            'end_datetime': forms.DateTimeInput,
         }
 
 
